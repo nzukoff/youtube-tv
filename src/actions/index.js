@@ -1,6 +1,4 @@
-export const getInfo = () => {
-    return async (dispatch) => {
-        dispatch({type: 'GOT_INFO'})
-    }
-  }
-  
+export const setChannelId = (channel) => ({
+    type: 'SET_CHANNEL_ID',
+    channel
+})

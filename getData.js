@@ -6,7 +6,7 @@ const getData = async (channels) => {
         const key = process.env.YT_KEY
 
         async function getChannelInfo(channelName) {
-        
+            let data 
             const channelURL = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=${channelName}&key=${key}`
             const channelResponse = await fetch(channelURL)
             const channelInfo = await channelResponse.json()
@@ -16,7 +16,10 @@ const getData = async (channels) => {
             const uploadsResponse = await fetch(uploadsURL)
             const uploadsInfo = await uploadsResponse.json()
             const numVideos = uploadsInfo.pageInfo.totalResults
+            const channelTitle = uploadsInfo.items[0].snippet.channelTitle
             
+            data = uploadsInfo.items
+
             async function getData(videos, nextPageToken) {
                 const nextPageResponse = await fetch(uploadsURL+`&pageToken=${nextPageToken}`)
                 const nextPageInfo = await nextPageResponse.json()
@@ -24,7 +27,9 @@ const getData = async (channels) => {
                 return (nextPageInfo.items.length === 50) ? await getData(videos, nextPageInfo.nextPageToken) : videos
             }
 
-            const data = await getData(uploadsInfo.items, uploadsInfo.nextPageToken)
+            if (uploadsInfo.nextPageToken) {
+                data = await getData(data, uploadsInfo.nextPageToken)
+            }
             
             let videosFromChannel  = await Promise.all(data.map(async (item) => {
                 const videoId = item.snippet.resourceId.videoId
@@ -41,6 +46,7 @@ const getData = async (channels) => {
             }))
 
             return {
+                channelTitle,
                 channelName, 
                 channelId, 
                 numVideos, 
@@ -55,7 +61,7 @@ const getData = async (channels) => {
 
         const JSONChannelsInfo = JSON.stringify(channelsInfo, null, 2)
         
-        fs.writeFile('data.json', JSONChannelsInfo, function(err) {
+        fs.writeFile('./src/data.json', JSONChannelsInfo, function(err) {
             if(err) {
                 return console.log(err);
             }
@@ -64,7 +70,7 @@ const getData = async (channels) => {
         }); 
     }
   
-// const channels = [`destinws2`, `theslowmoguys`, `Kurzgesagt`]
-const channels = [`Kurzgesagt`]
+const channels = [`destinws2`, `theslowmoguys`, `Kurzgesagt`]
+// const channels = [`WildLavaNetwork`]
 
 getData(channels)

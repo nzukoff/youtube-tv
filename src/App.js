@@ -3,12 +3,14 @@ import { connect } from 'react-redux'
 
 import './App.css';
 import Video from './components/Video/Video'
+import ChannelDrawer from './components/ChannelDrawer/ChannelDrawer'
 // import { addVideo } from './actions/index'
 
 
 export const App = (props) => {
   return (
     <div className="App">
+      <ChannelDrawer />
       <Video />
     </div>
   );
