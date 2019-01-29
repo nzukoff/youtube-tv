@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles'
 const styles = theme => ({
     video: {
       width: '100%',
-      paddingTop: '13px'
+    //   paddingTop: '13px'
     }
 })
 

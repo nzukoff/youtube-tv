@@ -6,16 +6,18 @@ import Video from './components/Video/Video'
 import ChannelDrawer from './components/ChannelDrawer/ChannelDrawer'
 // import { addVideo } from './actions/index'
 import { withStyles } from '@material-ui/core/styles'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import { 
   Grid,
   Typography
 } from '@material-ui/core'
 
+const theme = createMuiTheme({
+  typography: { fontFamily: "'Questrial', sans-serif" },
+})
+
 const styles = theme => ({
-  root: {
-    // backgroundColor: '#3e3e3e'
-  },
   drawer: {
     textAlign: 'left'
   },
@@ -24,10 +26,12 @@ const styles = theme => ({
 export const App = (props) => {
   const { classes } = props
   return (
-    <div className={classes.root}>
-        <ChannelDrawer />
-        <Video />
-    </div>
+    <MuiThemeProvider theme={theme}>
+      <div>
+          <ChannelDrawer />
+          <Video />
+      </div>
+    </MuiThemeProvider>
   );
 }
 
