@@ -27,11 +27,16 @@ function randomChoice(array) {
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SET_CHANNEL_ID':
-        return {
-            ...state, 
-            channel: action.channel,
-            channelId: action.channel.channelName
-        }
+            return {
+                ...state, 
+                channel: action.channel,
+                channelId: action.channel.channelName
+            }
+        case 'SET_VIDEO':
+            return {
+                ...state, 
+                video: action.video
+            }
 
         default:
         return (state)

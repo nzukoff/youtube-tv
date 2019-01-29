@@ -1,5 +1,7 @@
 const fetch = require('node-fetch')
 const fs = require('fs')
+const moment = require('moment')
+// import moment from 'moment';
 
 const getData = async (channels) => {
 
@@ -45,13 +47,19 @@ const getData = async (channels) => {
                 }
             }))
 
+            const totalDuration = videosFromChannel.reduce((acc, video) => {
+                acc+=moment.duration(video.duration)._milliseconds/1000
+                return acc
+            },0)
+
             return {
                 channelTitle,
                 channelName, 
                 channelId, 
                 numVideos, 
-                data,
-                videos: videosFromChannel
+                totalDuration,
+                // data,
+                videos: videosFromChannel,
             }
         }
 
@@ -70,7 +78,7 @@ const getData = async (channels) => {
         }); 
     }
   
-const channels = [`destinws2`, `theslowmoguys`, `Kurzgesagt`]
-// const channels = [`WildLavaNetwork`]
+const channels = [`destinws2`, `theslowmoguys`, `Kurzgesagt`, `enyay`, `TEDEducation`, `TEDtalksDirector`, `wired`, `vice`, `BonAppetitDotCom`, `corycotton`, `Vsauce`, `numberphile`, `AsapSCIENCE`, `keeroyz`, `1veritasium`, `minutephysics`, `DJparadiddle`, `PomplamooseMusic`]
+// const channels = [`nzukoff`]
 
 getData(channels)
