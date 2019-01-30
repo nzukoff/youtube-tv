@@ -89,7 +89,54 @@ const getData = async (channels) => {
         }); 
     }
   
-const channels = [`destinws2`, `theslowmoguys`, `Kurzgesagt`, `enyay`, `TEDEducation`, `TEDtalksDirector`, `wired`, `vice`, `BonAppetitDotCom`, `corycotton`, `Vsauce`, `numberphile`, `AsapSCIENCE`, `keeroyz`, `1veritasium`, `minutephysics`, `DJparadiddle`, `PomplamooseMusic`]
+const channels = [
+    `destinws2`, 
+    `theslowmoguys`, 
+    `Kurzgesagt`, 
+    `enyay`, 
+    `TEDEducation`, 
+    `TEDtalksDirector`, 
+    `wired`, 
+    `vice`, 
+    `BonAppetitDotCom`, 
+    `corycotton`, 
+    `Vsauce`, 
+    `numberphile`, 
+    `AsapSCIENCE`, 
+    `keeroyz`, 
+    `1veritasium`, 
+    `minutephysics`, 
+    `DJparadiddle`, 
+    `PomplamooseMusic`, 
+    `FirstWeFeast`, 
+    `testedcom`, 
+    `rhettandlink2`, 
+    `bgfilms`, 
+    `voxdotcom`, 
+    `React`, 
+    `BreakingTrail`, 
+    `Webzwithaz`, 
+    `collegehumor`, 
+    `PowerfulJRE`, 
+    `BuzzFeedVideo`,
+    `failarmy`,
+    `videogamedunkey`,
+    `StuntsAmazing1`,
+    `ThrasherMagazine`,
+    `unboxtherapy`,
+    `LinusTechTips`,
+    `RosannaPansino`,
+    `gordonramsay`,
+    `sxephil`,
+    `AmericasGotTalent`,
+    `NBCTheVoice`,
+    `teamcoco`,
+    `TheLateLateShow`,
+    `americastestkitchen`,
+    `01032010814`,
+    `businessinsider`,
+    `PTXofficial`
+]
 // const channels = [`nzukoff`]
 
 getData(channels)
