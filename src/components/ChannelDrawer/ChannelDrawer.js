@@ -20,64 +20,49 @@ import { setChannelId } from '../../actions/index'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = theme => ({
-  menu: {
-    color: 'white',
-    position: 'fixed',
-    top: 0,
-    left: 10,
-    opacity: 0.5,
-    paddingTop: '11px',
-    "&:hover": {
-        backgroundColor: "transparent"
-    }
-  },
-  title: {
-    textAlign: 'right',
-    paddingRight: '50px',
-    color: 'white',
-    textDecoration:'none',
-    // paddingTop: '13px',
-    opacity: 0.6
-  },
-  menuIcon: {
-    height: 30,
-    width: 30
-  },
-  paper: {
-      background: '#111111',
-      width: '20%'
-  },
-  listTitles: {
-      color: 'white',
-      opacity: 0.6
-  },
-  random: {
-    color: 'white',
-    opacity: 0.6,
-    paddingTop: '11px',
-    "&:hover": {
-        backgroundColor: "transparent"
-    }
-  },
-  randomIcon: {
-    height: 30,
-    width: 30
-  },
-  randomGrid: {
-      textAlign: 'right'
-  },
-  undo: {
-    color: 'white',
-    opacity: 0.6,
-    paddingTop: '11px',
-    "&:hover": {
-        backgroundColor: "transparent"
-    }
-  },
-  undoIcon: {
-    height: 30,
-    width: 30
-  },
+    menuIconButton: {
+        marginLeft: 12,
+        marginRight: 28,
+        color: 'white',
+        opacity: 0.6,
+        "&:hover": {
+            backgroundColor: "transparent"
+        }
+    },
+    iconButton: {
+        color: 'white',
+        opacity: 0.6,
+        "&:hover": {
+            backgroundColor: "transparent"
+        }
+    },
+    icon: {
+        fontSize: 36,
+    },
+    title: {
+        float: 'right',
+        display: 'inline',
+        paddingTop: 1,
+        paddingRight: 55,
+        fontSize: 36,
+        color: 'white',
+        textDecoration:'none',
+        opacity: 0.6,
+        [theme.breakpoints.down('xs')]: {
+            marginLeft: 24,
+            marginBottom: 24,
+        },
+    },
+    paper: {
+        background: '#111111',
+        opacity: 0.8,
+        width: 340
+    },
+    listTitles: {
+        color: 'white',
+        opacity: 0.7,
+        fontSize: 23,
+    },
 })
 
 export class ChannelDrawer extends Component {
@@ -121,7 +106,7 @@ export class ChannelDrawer extends Component {
         const sideList = (
             <Fragment>
                 <List>
-                    {this.props.channels.map((channel, index) => (
+                    {this.props.channels.map((channel) => (
                     <ListItem button key={channel.channelName} onClick={() => this.setChannel(channel, 'normal')}>
                         <ListItemText primary={channel.channelTitle.toUpperCase()} classes={{primary: classes.listTitles}} />
                     </ListItem>
@@ -132,34 +117,31 @@ export class ChannelDrawer extends Component {
             
         return (
             <Fragment>
-                <Grid container alignItems='center'>
-                    <Grid item xs={1} >
-                        <IconButton className={classes.menu} onClick={() => this.handleClick()} disableRipple={true}>
-                            <Menu className={classes.menuIcon}/>
+                <Grid container justify="space-between" alignItems="center">
+                    <Grid item xs={12} sm={6}>
+                        <IconButton className={classes.menuIconButton} onClick={() => this.handleClick()} disableRipple={true}>
+                            <Menu className={classes.icon}/>
                         </IconButton>
-                    </Grid>
-                    <Grid item xs={2} >
                         {this.state.prevChannel ? 
-                            <IconButton className={classes.undo} onClick={() => this.setChannel(null, 'previous')} disableRipple={true}>
-                                <Undo className={classes.undoIcon}/>
+                            <IconButton className={classes.iconButton} onClick={() => this.setChannel(null, 'previous')} disableRipple={true}>
+                                <Undo className={classes.icon}/>
                             </IconButton>
                             :
-                            <IconButton className={classes.undo} disabled={true} disableRipple={true}>
-                                <Undo className={classes.undoIcon}/>
+                            <IconButton className={classes.iconButton} disabled={true} disableRipple={true}>
+                                <Undo className={classes.icon}/>
                             </IconButton>
                         }
-                        <IconButton className={classes.random} onClick={() => this.setChannel(null, 'random')} disableRipple={true} >
-                            <Casino className={classes.randomIcon}/>
+                        <IconButton className={classes.iconButton} onClick={() => this.setChannel(null, 'random')} disableRipple={true} >
+                            <Casino className={classes.icon}/>
                         </IconButton>
                     </Grid>
-                    <Grid item xs={4}></Grid>
-                    <Grid item xs={5}  >
+                    <Grid item xs={12} sm={6}>
                         <Typography variant="h4" component="a" href={`https://www.youtube.com/user/${this.props.channel.channelName}`} className={classes.title}>
                             {this.props.channel.channelTitle.toUpperCase()}
                         </Typography>
-                        {/* {props.video ? 
-                        <Typography variant="subtitle1" component="a" href={`https://www.youtube.com/watch?v=${props.video.videoId}`} className={classes.subtitle}>
-                            {props.video.title}
+                        {/* {this.props.video ? 
+                        <Typography variant="subtitle1" component="a" href={`https://www.youtube.com/watch?v=${this.props.video.videoId}`} className={classes.subtitle}>
+                            {this.props.video.title}
                         </Typography>
                         : ''} */}
                     </Grid>
@@ -186,7 +168,8 @@ export class ChannelDrawer extends Component {
 
 const mapStateToProps = state => ({
   channels: state.channels,
-  channel: state.channel
+  channel: state.channel,
+  video: state.video
 })
 
 const mapDispatchToProps = dispatch => ({
