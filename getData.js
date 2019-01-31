@@ -114,7 +114,7 @@ const channels = {
     numberphile: 'UCoxcjq-8xIDTYp3uz647V5A',
     AsapSCIENCE: 'UCC552Sd-3nyi_tk2BudLUzA',
     keeroyz: 'UCbfYPyITQ-7l4upoX8nvctg',
-    '1veritasium': 'UCHnyfMqiRRG1u-2MsSQLbXA',
+    veritasium: 'UCHnyfMqiRRG1u-2MsSQLbXA',
     minutephysics: 'UCUHW94eEFW7hkUMVaZz4eDg',
     DJparadiddle: 'UCtWuB1D_E3mcyYThA9iKggQ',
     PomplamooseMusic: 'UCSiPjfAJBgbFlIUsxOWpK0w',
@@ -136,9 +136,23 @@ const channels = {
     NBCTheVoice: 'UCpdK1NLHxEUGXc1gq2NxkTw',
     TheLateLateShow: 'UCJ0uqCI0Vqr2Rrt1HseGirg',
     americastestkitchen: 'UCxAS_aK7sS2x_bqnlJHDSHw',
-    '01032010814': 'UC1zZE_kJ8rQHgLTVfobLi_g',
+    kingOfRandom: 'UC1zZE_kJ8rQHgLTVfobLi_g',
     businessinsider: 'UCcyq283he07B7_KUX07mmtA',
-    PTXofficial: 'UCmv1CLT6ZcFdTJMHxaR9XeA' 
+    PTXofficial: 'UCmv1CLT6ZcFdTJMHxaR9XeA',
+    ScaryPockets: 'UC-2JUs_G21BrJ0efehwGkUw',
+    SimoneGiertz: 'UC3KEoMzNz8eYnwBC34RaKCQ',
+    JacobCollier: 'UCtmY49Zn4l0RMJnTWfV7Wsg',
+    conan: 'UCi7GJNg51C3jgmYTUwqoUXA',
+    epicurious: 'UCcjhYlL1WRBjKaJsMH_h7Lg',
+    tryGuys: 'UCpi8TJfiA4lKGkaXs__YdBA',
+    safiyaNygaard: 'UCbAwSkqJ1W_Eg7wr3cp5BUA',
+    insideEdition: 'UC9k-yiEpRHMNVOnOi_aQK8w',
+    vergeScience: 'UCtxJFU9DgUhfr2J2bveCHkQ',
+    practicalEngineering: 'UCMOqf8ab-42UUQIdVoKwjlQ',
+    infoGraphicsShow: 'UCfdNM3NAhaBOXCafH7krzrA',
+    wendoverProductions: 'UC9RM-iSvTu1uPJb8X5yp3EQ',
+    make: 'UChtY6O8Ahw2cz05PS2GhUbg',
+    DIYEngineering: 'UCkgxMWPImqt1VxMaI9d79LA'
 }
 
 getData(channels)
