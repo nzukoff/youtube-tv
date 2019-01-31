@@ -1,142 +1,144 @@
 const fetch = require('node-fetch')
 const fs = require('fs')
 const moment = require('moment')
-// import moment from 'moment';
 
 const getData = async (channels) => {
 
-        const key = process.env.YT_KEY
+    const key = process.env.YT_KEY
 
-        async function getChannelInfo(channelName) {
-            let data 
-            const channelURL = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=${channelName}&key=${key}`
-            const channelResponse = await fetch(channelURL)
-            const channelInfo = await channelResponse.json()
-            const channelId = channelInfo.items[0].id
-            const uploadsPlaylistId = channelInfo.items[0].contentDetails.relatedPlaylists.uploads
-            const uploadsURL = `https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${uploadsPlaylistId}&key=${key}&part=snippet&maxResults=50`
-            const uploadsResponse = await fetch(uploadsURL)
-            const uploadsInfo = await uploadsResponse.json()
-            const numVideos = uploadsInfo.pageInfo.totalResults
-            const channelTitle = uploadsInfo.items[0].snippet.channelTitle
-            
-            data = uploadsInfo.items
+    async function getChannelInfo(channelId) {
 
-            async function getData(videos, nextPageToken) {
-                const nextPageResponse = await fetch(uploadsURL+`&pageToken=${nextPageToken}`)
-                const nextPageInfo = await nextPageResponse.json()
-                videos = videos.concat(nextPageInfo.items)
-                return (nextPageInfo.items.length === 50) ? await getData(videos, nextPageInfo.nextPageToken) : videos
-            }
+        const channelURL = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=viewCount&key=${key}&type=video`
+        const channelResponse = await fetch(channelURL)
+        const channelInfo = await channelResponse.json()
+        const channelTitle = channelInfo.items[0].snippet.channelTitle
+        
+        let videos = []
 
-            if (uploadsInfo.nextPageToken) {
-                data = await getData(data, uploadsInfo.nextPageToken)
-            }
-            
-            let videosFromChannel  = await Promise.all(data.map(async (item) => {
-                const videoId = item.snippet.resourceId.videoId
-                const videoURL = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=${key}`
-                const videosResponse = await fetch(videoURL)
-                const videoInfo = await videosResponse.json()
-                return {
-                    videoId,
-                    title: item.snippet.title,
-                    description: item.snippet.description,
-                    thumbnail: item.snippet.thumbnails.standard,
-                    duration: videoInfo.items[0].contentDetails.duration
-                }
-            }))
+        channelInfo.items.map((item) => {
+            if (item.id.kind === 'youtube#video'){
+                videos.push(item)
+            } 
+        })
 
-            const totalDuration = videosFromChannel.reduce((acc, video) => {
-                acc+=moment.duration(video.duration)._milliseconds/1000
-                return acc
-            },0)
+        async function getData(videos, nextPageToken) {
+            const nextPageResponse = await fetch(channelURL+`&pageToken=${nextPageToken}`)
+            const nextPageInfo = await nextPageResponse.json()
+            nextPageInfo.items.map((item) => {
+                if (item.id.kind === 'youtube#video'){
+                    videos.push(item)
+                } 
+            })
+            return (nextPageInfo.items.length === 50) ? await getData(videos, nextPageInfo.nextPageToken) : videos
+        }
 
-            function shuffleArray(array) {
-                for (var i = array.length - 1; i > 0; i--) {
-                    var j = Math.floor(Math.random() * (i + 1));
-                    var temp = array[i];
-                    array[i] = array[j];
-                    array[j] = temp;
-                }
-            }
+        if (channelInfo.nextPageToken) {
+            videos = await getData(videos, channelInfo.nextPageToken)
+        }
 
-            shuffleArray(videosFromChannel)
+        const numVideos = videos.length
 
+        let videosFromChannel  = await Promise.all(videos.map(async (item) => {
+            const videoId = item.id.videoId
+            const videoURL = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=${key}`
+            const videosResponse = await fetch(videoURL)
+            const videoInfo = await videosResponse.json()
             return {
-                channelTitle,
-                channelName, 
-                channelId, 
-                numVideos, 
-                totalDuration,
-                // data,
-                videos: videosFromChannel
+                videoId,
+                title: item.snippet.title,
+                thumbnail: item.snippet.thumbnails.high,
+                duration: videoInfo.items[0].contentDetails.duration
+            }
+        }))
+
+        const totalDuration = videosFromChannel.reduce((acc, video) => {
+            acc+=moment.duration(video.duration)._milliseconds/1000
+            return acc
+        },0)
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
             }
         }
 
-        const channelsInfo = await Promise.all(channels.map(async (channelName) => {
-            return await getChannelInfo(channelName)
-        }))
+        shuffleArray(videosFromChannel)
 
-        const JSONChannelsInfo = JSON.stringify(channelsInfo, null, 2)
-        
-        fs.writeFile('./src/data.json', JSONChannelsInfo, function(err) {
-            if(err) {
-                return console.log(err);
-            }
-        
-            console.log("The file was saved!");
-        }); 
+
+        return {
+            channelTitle,
+            channelId, 
+            numVideos, 
+            totalDuration,
+            videos: videosFromChannel
+        }
     }
-  
-const channels = [
-    `destinws2`, 
-    `theslowmoguys`, 
-    `Kurzgesagt`, 
-    `enyay`, 
-    `TEDEducation`, 
-    `TEDtalksDirector`, 
-    `wired`, 
-    `vice`, 
-    `BonAppetitDotCom`, 
-    `corycotton`, 
-    `Vsauce`, 
-    `numberphile`, 
-    `AsapSCIENCE`, 
-    `keeroyz`, 
-    `1veritasium`, 
-    `minutephysics`, 
-    `DJparadiddle`, 
-    `PomplamooseMusic`, 
-    `FirstWeFeast`, 
-    `testedcom`, 
-    `rhettandlink2`, 
-    `bgfilms`, 
-    `voxdotcom`, 
-    `React`, 
-    `BreakingTrail`, 
-    `Webzwithaz`, 
-    `collegehumor`, 
-    `PowerfulJRE`, 
-    `BuzzFeedVideo`,
-    `failarmy`,
-    `videogamedunkey`,
-    `StuntsAmazing1`,
-    `ThrasherMagazine`,
-    `unboxtherapy`,
-    `LinusTechTips`,
-    `RosannaPansino`,
-    `gordonramsay`,
-    `sxephil`,
-    `AmericasGotTalent`,
-    `NBCTheVoice`,
-    `teamcoco`,
-    `TheLateLateShow`,
-    `americastestkitchen`,
-    `01032010814`,
-    `businessinsider`,
-    `PTXofficial`
-]
-// const channels = [`nzukoff`]
+
+    const channelIds = []
+    for (let key in channels) {
+        channelIds.push(channels[key])
+    }
+
+    const channelsInfo = await Promise.all(channelIds.map(async (channelId) => {
+        return await getChannelInfo(channelId)
+    }))
+
+    const JSONChannelsInfo = JSON.stringify(channelsInfo, null, 2)
+    
+    fs.writeFile('./src/data.json', JSONChannelsInfo, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+    
+        console.log("The file was saved!");
+    }); 
+
+
+}
+
+const channels = { 
+    destinws2: 'UC6107grRI4m0o2-emgoDnAA',
+    theslowmoguys: 'UCUK0HBIBWgM2c4vsPhkYY4w',
+    Kurzgesagt: 'UCsXVk37bltHxD1rDPwtNM8Q',
+    enyay: 'UCBa659QWEk1AI4Tg--mrJ2A',
+    TEDEducation: 'UCsooa4yRKGN_zEE8iknghZA',
+    TEDtalksDirector: 'UCAuUUnT6oDeKwE6v1NGQxug',
+    wired: 'UCftwRNsjfRo08xYE31tkiyw',
+    vice: 'UCn8zNIfYAQNdrFRrr8oibKw',
+    BonAppetitDotCom: 'UCbpMy0Fg74eXXkvxJrtEn3w',
+    corycotton: 'UCRijo3ddMTht_IHyNSNXpNQ',
+    Vsauce: 'UC6nSFpj9HTCZ5t-N3Rm3-HA',
+    numberphile: 'UCoxcjq-8xIDTYp3uz647V5A',
+    AsapSCIENCE: 'UCC552Sd-3nyi_tk2BudLUzA',
+    keeroyz: 'UCbfYPyITQ-7l4upoX8nvctg',
+    '1veritasium': 'UCHnyfMqiRRG1u-2MsSQLbXA',
+    minutephysics: 'UCUHW94eEFW7hkUMVaZz4eDg',
+    DJparadiddle: 'UCtWuB1D_E3mcyYThA9iKggQ',
+    PomplamooseMusic: 'UCSiPjfAJBgbFlIUsxOWpK0w',
+    FirstWeFeast: 'UCPD_bxCRGpmmeQcbe2kpPaA',
+    testedcom: 'UCiDJtJKMICpb9B1qf7qjEOA',
+    bgfilms: 'UCJHA_jMfCvEnv-3kRjTCQXw',
+    voxdotcom: 'UCLXo7UDZvByw2ixzpQCufnA',
+    BreakingTrail: 'UC6E2mP01ZLH_kbAyeazCNdg',
+    Webzwithaz: 'UCNIuvl7V8zACPpTmmNIqP2A',
+    PowerfulJRE: 'UCzQUP1qoWDoEbmsQxvdjxgQ',
+    BuzzFeedVideo: 'UCpko_-a4wgz2u_DgDgd9fqA',
+    failarmy: 'UCPDis9pjXuqyI7RYLJ-TTSA',
+    videogamedunkey: 'UCsvn_Po0SmunchJYOWpOxMg',
+    StuntsAmazing1: 'UC0OnAjC52vtL_N3f76BU9dw',
+    ThrasherMagazine: 'UCt16NSYjauKclK67LCXvQyA',
+    unboxtherapy: 'UCsTcErHg8oDvUnTzoqsYeNw',
+    gordonramsay: 'UCIEv3lZ_tNXHzL3ox-_uUGQ',
+    AmericasGotTalent: 'UCT2X19JJaJGUN7mrYuImANQ',
+    NBCTheVoice: 'UCpdK1NLHxEUGXc1gq2NxkTw',
+    TheLateLateShow: 'UCJ0uqCI0Vqr2Rrt1HseGirg',
+    americastestkitchen: 'UCxAS_aK7sS2x_bqnlJHDSHw',
+    '01032010814': 'UC1zZE_kJ8rQHgLTVfobLi_g',
+    businessinsider: 'UCcyq283he07B7_KUX07mmtA',
+    PTXofficial: 'UCmv1CLT6ZcFdTJMHxaR9XeA' 
+}
 
 getData(channels)

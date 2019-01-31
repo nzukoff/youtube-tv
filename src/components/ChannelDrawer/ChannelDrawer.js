@@ -107,7 +107,7 @@ export class ChannelDrawer extends Component {
             <Fragment>
                 <List>
                     {this.props.channels.map((channel) => (
-                    <ListItem button key={channel.channelName} onClick={() => this.setChannel(channel, 'normal')}>
+                    <ListItem button key={channel.channelTitle} onClick={() => this.setChannel(channel, 'normal')}>
                         <ListItemText primary={channel.channelTitle.toUpperCase()} classes={{primary: classes.listTitles}} />
                     </ListItem>
                     ))}
@@ -136,7 +136,7 @@ export class ChannelDrawer extends Component {
                         </IconButton>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <Typography variant="h4" component="a" href={`https://www.youtube.com/user/${this.props.channel.channelName}`} className={classes.title}>
+                        <Typography variant="h4" component="a" href={`https://www.youtube.com/channel/${this.props.channel.channelId}`} className={classes.title}>
                             {this.props.channel.channelTitle.toUpperCase()}
                         </Typography>
                         {/* {this.props.video ? 

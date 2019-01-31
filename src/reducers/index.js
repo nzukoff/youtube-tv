@@ -17,7 +17,7 @@ const rootReducer = (state = initialState, action) => {
             return {
                 ...state, 
                 channel: action.channel,
-                channelId: action.channel.channelName
+                channelId: action.channel.channelTitle
             }
         case 'SET_VIDEO':
             return {
