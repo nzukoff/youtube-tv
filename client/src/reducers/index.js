@@ -3,7 +3,6 @@ const initialState = {}
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SET_CHANNEL_ID':
-        console.log("action ", action)
             return {
                 ...state, 
                 channel: action.channel,

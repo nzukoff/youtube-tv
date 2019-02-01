@@ -1,6 +1,5 @@
 export const getChannelId = (channel) => {
     return async (dispatch) => {
-        console.log("CHANNEL ", channel)
         const response = await fetch(`/api/channels/${channel}`)
         const channelResponse = await response.json()
         dispatch(setChannelId(channelResponse))
@@ -9,7 +8,15 @@ export const getChannelId = (channel) => {
 
 export const setChannelId = (channel) => ({
     type: 'SET_CHANNEL_ID',
-    channel
+    channel,
+    meta: {
+        mixpanel: {
+            event: 'Load Channel',
+            props: {
+                channel: channel.channelTitle
+            }
+        }
+    }
 })
 
 export const setVideo = (video) => ({
