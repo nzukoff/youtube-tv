@@ -30,7 +30,6 @@ export class App extends Component {
   }
 
   render() {
-    const { classes } = this.props
     return (
       <MuiThemeProvider theme={theme}>
         <div>

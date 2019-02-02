@@ -1,15 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react'
+import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import rootReducer from './reducers/index'
 import thunk from 'redux-thunk';
 import mixpanel from 'mixpanel-browser'
 import MixpanelMiddleware from 'redux-mixpanel-middleware'
-import './index.css';
-import App from './App';
+import './index.css'
+import App from './App'
+import dotenv from 'dotenv'
 
-const t = process.env.MP_CHANNEL_SURF
+dotenv.config()
+
+const t = process.env.REACT_APP_MP_CHANNEL_SURF
 
 mixpanel.init(t)
 const mixpanelMiddleware = new MixpanelMiddleware(mixpanel)

@@ -24,3 +24,8 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+.env
+
+/src/main/resources/static/static
+/src/main/resources/static/precache-manifest.*
