@@ -46,7 +46,7 @@ copyResources.dependsOn npm_run_build
 
 processResources.dependsOn copyResources
 
-task getData(type: Exec) {
+task getData(type: Exec) << {
 	commandLine 'node', 'client/getData.js'
 }
 
