@@ -4,7 +4,7 @@ const moment = require('moment')
 
 const getData = async (channels) => {
 
-    const key = process.env.YT_KEY
+    const key = process.env.REACT_APP_YT_KEY
 
     async function getChannelInfo(channelId) {
 
@@ -152,7 +152,13 @@ const channels = {
     infoGraphicsShow: 'UCfdNM3NAhaBOXCafH7krzrA',
     wendoverProductions: 'UC9RM-iSvTu1uPJb8X5yp3EQ',
     make: 'UChtY6O8Ahw2cz05PS2GhUbg',
-    DIYEngineering: 'UCkgxMWPImqt1VxMaI9d79LA'
+    DIYEngineering: 'UCkgxMWPImqt1VxMaI9d79LA',
+    SciShow: 'UCZYTClx2T1of7BRZ86-8fow',
+    FoodInsider: 'UCwiTOchWeKjrJZw7S1H__1g',
+    Computerphile: 'UC9-y-6csu5WGm29I7JiwpnA',
+    ThreeBlueOneBrown: 'UCYO_jab_esuFRV4b17AJtAw',
+    Munchies: 'UCaLfMkkHhSA_LaCta0BzyhQ',
+    KennyHotz: 'UCDbtWmkS6hyey4IBE1kaqrQ'
 }
 
 getData(channels)
