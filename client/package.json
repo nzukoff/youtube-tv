@@ -9,8 +9,6 @@
     "moment": "^2.24.0",
     "node-fetch": "^2.3.0",
     "react": "^16.7.0",
-    "react-app-rewire-define-plugin": "^1.0.0",
-    "react-app-rewired": "^2.0.3",
     "react-dom": "^16.7.0",
     "react-redux": "^5.0.7",
     "react-scripts": "^2.1.5",
@@ -20,7 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-app-rewired build",
+    "build": "rescripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "getData": "node getData.js"
