@@ -48,6 +48,6 @@ processResources.dependsOn copyResources
 
 task getData << {
    exec {
-        commandLine 'npm', 'run', 'getData'
+        commandLine 'cd', 'client', 'npm', 'run', 'getData'
    }
 }
