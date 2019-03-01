@@ -46,8 +46,6 @@ copyResources.dependsOn npm_run_build
 
 processResources.dependsOn copyResources
 
-task getData << {
-   exec {
-        commandLine "node", "client/getData.js"
-   }
+task getData(type: NodeTask) {
+  script = file('./client/getData.js')
 }

@@ -10,7 +10,6 @@ const getData = async (channels) => {
 
         const channelURL = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=viewCount&key=${key}&type=video`
         const channelResponse = await fetch(channelURL)
-        console.log("CR", channelResponse)
         const channelInfo = await channelResponse.json()
         const channelTitle = channelInfo.items[0].snippet.channelTitle
         
