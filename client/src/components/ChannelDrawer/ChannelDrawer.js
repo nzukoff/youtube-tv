@@ -15,7 +15,7 @@ import Menu from '@material-ui/icons/Menu'
 import Casino from '@material-ui/icons/Casino'
 import Undo from '@material-ui/icons/Undo'
 
-import { getChannelId, getChannels } from '../../actions/index'
+import { getChannelId, getChannels, chooseChannel } from '../../actions/index'
 
 import { withStyles } from '@material-ui/core/styles'
 
@@ -79,27 +79,6 @@ export class ChannelDrawer extends Component {
     toggleDrawer = () => {
         this.setState({drawerOpen: false})
     }
-    
-    randomChoice = (array) => {
-        const index = Math.floor(Math.random() * array.length)
-        const item = array[index]
-        return item
-    }
-
-    setChannel = (channel, type) => {
-        if (type === 'normal') {
-            this.setState({prevChannel: this.props.channel.channelId})
-            console.log("CA ", channel)
-            this.props.getChannelId(channel)
-        } else if (type === 'random') {
-            const randomChannel = this.randomChoice(this.props.channels)[1]
-            this.setState({prevChannel: this.props.channel.channelId})
-            this.props.getChannelId(randomChannel)
-        } else if (type === 'previous') {
-            this.setState({prevChannel: this.props.channel.channelId})
-            this.props.getChannelId(this.state.prevChannel)
-        }
-    }
 
     render() {
         const { classes } = this.props
@@ -108,7 +87,7 @@ export class ChannelDrawer extends Component {
             <Fragment>
                 <List>
                     {this.props.channels.map((channel) => (
-                    <ListItem button key={channel[1]} onClick={() => this.setChannel(channel[1], 'normal')}>
+                    <ListItem button key={channel[1]} onClick={() => this.props.chooseChannel(channel[1], 'normal')}>
                         <ListItemText primary={channel[0].toUpperCase()} classes={{primary: classes.listTitles}} />
                     </ListItem>
                     ))}
@@ -122,8 +101,8 @@ export class ChannelDrawer extends Component {
                         <IconButton className={classes.menuIconButton} onClick={() => this.handleClick()} disableRipple={true}>
                             <Menu className={classes.icon}/>
                         </IconButton>
-                        {this.state.prevChannel ? 
-                            <IconButton className={classes.iconButton} onClick={() => this.setChannel(null, 'previous')} disableRipple={true}>
+                        {this.props.prevChannel ? 
+                            <IconButton className={classes.iconButton} onClick={() => this.props.chooseChannel(null, 'previous')} disableRipple={true}>
                                 <Undo className={classes.icon}/>
                             </IconButton>
                             :
@@ -131,7 +110,7 @@ export class ChannelDrawer extends Component {
                                 <Undo className={classes.icon}/>
                             </IconButton>
                         }
-                        <IconButton className={classes.iconButton} onClick={() => this.setChannel(null, 'random')} disableRipple={true} >
+                        <IconButton className={classes.iconButton} onClick={() => this.props.chooseChannel(null, 'random')} disableRipple={true} >
                             <Casino className={classes.icon}/>
                         </IconButton>
                     </Grid>
@@ -169,12 +148,14 @@ export class ChannelDrawer extends Component {
 const mapStateToProps = state => ({
   channels: state.channels,
   channel: state.channel,
-  video: state.video
+  video: state.video, 
+  prevChannel: state.prevChannel
 })
 
 const mapDispatchToProps = dispatch => ({
     getChannelId: (channel) => dispatch(getChannelId(channel)),
-    getChannels: () => dispatch(getChannels())
+    getChannels: () => dispatch(getChannels()), 
+    chooseChannel: (channel, type) => dispatch(chooseChannel(channel, type))
 })
 
 export default connect(

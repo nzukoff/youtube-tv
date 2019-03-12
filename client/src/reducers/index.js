@@ -6,6 +6,7 @@ const rootReducer = (state = initialState, action) => {
             return {
                 ...state, 
                 channel: action.channel,
+                prevChannel: action.prevChannel
             }
         case 'SET_VIDEO':
             return {

@@ -1,14 +1,15 @@
-export const getChannelId = (channel) => {
+export const getChannelId = (channel, prevChannel) => {
     return async (dispatch) => {
         const response = await fetch(`/api/channels/${channel}`)
         const channelResponse = await response.json()
-        dispatch(setChannelId(channelResponse))
+        dispatch(setChannelId(channelResponse, prevChannel))
     }
 }
 
-export const setChannelId = (channel) => ({
+export const setChannelId = (channel, prevChannel) => ({
     type: 'SET_CHANNEL_ID',
     channel,
+    prevChannel,
     meta: {
         mixpanel: {
             event: 'Load Channel',
@@ -18,6 +19,20 @@ export const setChannelId = (channel) => ({
         }
     }
 })
+
+export const chooseChannel = (channel, type) => {
+    return (dispatch, getState) => {
+        const { channel: currentChannel, channels, prevChannel } = getState()
+        if (type === 'normal') {
+            dispatch(getChannelId(channel, currentChannel))
+        } else if (type === 'random') {
+            const randomChannel = randomChoice(channels)[1]
+            dispatch(getChannelId(randomChannel, currentChannel))
+        } else if (type === 'previous') {
+            dispatch(getChannelId(prevChannel.channelId, currentChannel))
+        }
+    }
+}
 
 export const setVideo = (video) => ({
     type: 'SET_VIDEO',
