@@ -14,7 +14,9 @@
     "react-scripts": "^2.1.5",
     "redux": "^4.0.0",
     "redux-mixpanel-middleware": "^1.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "@rescripts/cli": "0.0.10",
+    "@rescripts/rescript-env": "0.0.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,8 +35,7 @@
     "not op_mini all"
   ],
   "proxy": "http://localhost:8080/",
-  "devDependencies": {
-    "@rescripts/cli": "0.0.10",
-    "@rescripts/rescript-env": "0.0.5"
-  }
+  "rescripts": [
+    "env"
+  ]
 }
