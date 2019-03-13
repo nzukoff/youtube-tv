@@ -1,4 +1,6 @@
-const initialState = {}
+const initialState = {
+    channelsPlayed: []
+}
 
 const rootReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -6,7 +8,8 @@ const rootReducer = (state = initialState, action) => {
             return {
                 ...state, 
                 channel: action.channel,
-                prevChannel: action.prevChannel
+                prevChannel: action.prevChannel,
+                channelsPlayed: action.channelsPlayed
             }
         case 'SET_VIDEO':
             return {

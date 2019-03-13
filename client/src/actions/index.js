@@ -1,15 +1,25 @@
 export const getChannelId = (channel, prevChannel) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const { channelsPlayed } = getState()
         const response = await fetch(`/api/channels/${channel}`)
         const channelResponse = await response.json()
-        dispatch(setChannelId(channelResponse, prevChannel))
+        if (!channelsPlayed.some(channel => channel.channelId === channelResponse.channelId)) {
+            if (channelsPlayed.length < 20) {
+                channelsPlayed.push(channelResponse)
+            } else {
+                channelsPlayed.shift()
+                channelsPlayed.push(channelResponse)
+            }
+        }
+        dispatch(setChannelId(channelResponse, prevChannel, channelsPlayed))
     }
 }
 
-export const setChannelId = (channel, prevChannel) => ({
+export const setChannelId = (channel, prevChannel, channelsPlayed) => ({
     type: 'SET_CHANNEL_ID',
     channel,
     prevChannel,
+    channelsPlayed,
     meta: {
         mixpanel: {
             event: 'Load Channel',
@@ -22,11 +32,11 @@ export const setChannelId = (channel, prevChannel) => ({
 
 export const chooseChannel = (channel, type) => {
     return (dispatch, getState) => {
-        const { channel: currentChannel, channels, prevChannel } = getState()
+        const { channel: currentChannel, channels, prevChannel, channelsPlayed } = getState()
         if (type === 'normal') {
             dispatch(getChannelId(channel, currentChannel))
         } else if (type === 'random') {
-            const randomChannel = randomChoice(channels)[1]
+            const randomChannel = randomChoice(channels, channelsPlayed)[1]
             dispatch(getChannelId(randomChannel, currentChannel))
         } else if (type === 'previous') {
             dispatch(getChannelId(prevChannel.channelId, currentChannel))
@@ -40,11 +50,12 @@ export const setVideo = (video) => ({
 })
 
 export const getChannels = () => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const { channelsPlayed } = getState()
         const response = await fetch(`/api/channels/`)
         const channelsResponse = await response.json()
         dispatch(setChannels(channelsResponse))
-        dispatch(getChannelId(randomChoice(channelsResponse)[1]))
+        dispatch(getChannelId(randomChoice(channelsResponse, channelsPlayed)[1]))
     }
 }
 
@@ -53,8 +64,9 @@ export const setChannels = (channels) => ({
     channels
 })
 
-const randomChoice = (array) => {
-    const index = Math.floor(Math.random() * array.length)
-    const item = array[index]
+const randomChoice = (channels, channelsPlayed) => {
+    const filteredChannels = channels.filter(channel => !channelsPlayed.some(c => c.channelId === channel[1]))
+    const index = Math.floor(Math.random() * filteredChannels.length)
+    const item = filteredChannels[index]
     return item
 }
