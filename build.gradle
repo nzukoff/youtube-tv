@@ -42,7 +42,14 @@ task copyResources(type: Copy) {
     from 'client/build/' into 'src/main/resources/static'
 }
 
-npm_install.outputs.upToDateWhen { true }
+task npmInstall(overwrite: true, type: NpmTask, dependsOn: 'npmSetup') {
+    inputs.file('package.json')
+    outputs.upToDateWhen { file('node_modules').exists() }
+
+    npmCommand = ['install']
+}
+
+npm_run_build.dependsOn npmInstall
 
 copyResources.dependsOn npm_run_build
 
