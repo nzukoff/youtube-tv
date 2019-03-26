@@ -49,8 +49,6 @@ task npmInstall(overwrite: true, type: NpmTask, dependsOn: 'npmSetup') {
     npmCommand = ['install']
 }
 
-npm_run_build.dependsOn npmInstall
-
 copyResources.dependsOn npm_run_build
 
 processResources.dependsOn copyResources
