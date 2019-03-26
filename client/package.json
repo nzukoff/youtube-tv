@@ -5,18 +5,18 @@
   "dependencies": {
     "@material-ui/core": "^3.9.1",
     "@material-ui/icons": "^3.0.2",
+    "@rescripts/cli": "0.0.10",
+    "@rescripts/rescript-env": "0.0.5",
     "mixpanel-browser": "^2.26.0",
     "moment": "^2.24.0",
     "node-fetch": "^2.3.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-redux": "^5.0.7",
-    "react-scripts": "^2.1.5",
+    "react-scripts": "^2.1.8",
     "redux": "^4.0.0",
     "redux-mixpanel-middleware": "^1.0.1",
-    "redux-thunk": "^2.3.0",
-    "@rescripts/cli": "0.0.10",
-    "@rescripts/rescript-env": "0.0.5"
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",

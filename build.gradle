@@ -42,6 +42,8 @@ task copyResources(type: Copy) {
     from 'client/build/' into 'src/main/resources/static'
 }
 
+npm_install.outputs.upToDateWhen { true }
+
 copyResources.dependsOn npm_run_build
 
 processResources.dependsOn copyResources
