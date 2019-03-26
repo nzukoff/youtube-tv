@@ -51,6 +51,20 @@ const styles = theme => ({
         [theme.breakpoints.down('xs')]: {
             marginLeft: 24,
             marginBottom: 24,
+            float: 'left'
+        },
+    },
+    subtitle: {
+        float: 'right',
+        display: 'inline',
+        paddingTop: 1,
+        paddingRight: 55,
+        color: 'white',
+        textDecoration:'none',
+        opacity: 0.6,
+        [theme.breakpoints.down('xs')]: {
+            marginLeft: 24,
+            marginBottom: 24,
         },
     },
     paper: {
@@ -97,7 +111,7 @@ export class ChannelDrawer extends Component {
         return (
             <Fragment>
                 <Grid container justify="space-between" alignItems="center">
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={5}>
                         <IconButton className={classes.menuIconButton} onClick={() => this.handleClick()} disableRipple={true}>
                             <Menu className={classes.icon}/>
                         </IconButton>
@@ -114,15 +128,10 @@ export class ChannelDrawer extends Component {
                             <Casino className={classes.icon}/>
                         </IconButton>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={7}>
                         <Typography variant="h4" component="a" href={`https://www.youtube.com/channel/${this.props.channel.channelId}`} className={classes.title}>
                             {this.props.channel.channelTitle.toUpperCase()}
                         </Typography>
-                        {/* {this.props.video ? 
-                        <Typography variant="subtitle1" component="a" href={`https://www.youtube.com/watch?v=${this.props.video.videoId}`} className={classes.subtitle}>
-                            {this.props.video.title}
-                        </Typography>
-                        : ''} */}
                     </Grid>
                 </Grid>
                 

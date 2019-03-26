@@ -9,17 +9,21 @@ const getData = async (channels) => {
     async function getChannelInfo(channelId) {
 
         const channelURL = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=50&order=viewCount&key=${key}&type=video`
-        const channelResponse = await fetch(channelURL)
-        const channelInfo = await channelResponse.json()
-        const channelTitle = channelInfo.items[0].snippet.channelTitle
-        
-        let videos = []
 
-        channelInfo.items.map((item) => {
-            if (item.id.kind === 'youtube#video'){
-                videos.push(item)
-            } 
-        })
+
+            const channelResponse = await fetch(channelURL)
+            const channelInfo = await channelResponse.json()
+            // console.log("cr", channelInfo)
+            const channelTitle = channelInfo.items[0].snippet.channelTitle
+            
+            let videos = []
+    
+            channelInfo.items.map((item) => {
+                if (item.id.kind === 'youtube#video'){
+                    videos.push(item)
+                } 
+            })
+        
 
         async function getData(videos, nextPageToken) {
             const nextPageResponse = await fetch(channelURL+`&pageToken=${nextPageToken}`)
@@ -45,7 +49,9 @@ const getData = async (channels) => {
             const videoInfo = await videosResponse.json()
             return {
                 videoId,
-                title: item.snippet.title,
+                title: item.snippet.title.replace("&#39;", "\'")
+                    .replace(/&quot;/g, "\'")
+                    .replace("&amp;", "\&"),
                 thumbnail: item.snippet.thumbnails.high,
                 duration: videoInfo.items[0].contentDetails.duration
             }
@@ -158,7 +164,8 @@ const channels = {
     Computerphile: 'UC9-y-6csu5WGm29I7JiwpnA',
     ThreeBlueOneBrown: 'UCYO_jab_esuFRV4b17AJtAw',
     Munchies: 'UCaLfMkkHhSA_LaCta0BzyhQ',
-    KennyHotz: 'UCDbtWmkS6hyey4IBE1kaqrQ'
+    KennyHotz: 'UCDbtWmkS6hyey4IBE1kaqrQ',
+    RealStories: 'UCu4XcDBdnZkV6-5z2f16M0g'
 }
 
 getData(channels)

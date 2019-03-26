@@ -6,11 +6,24 @@ import { setVideo } from '../../actions/index'
 
 import { withStyles } from '@material-ui/core/styles'
 
+import { 
+    Typography
+} from '@material-ui/core'
+
 const styles = theme => ({
     video: {
       width: '100%',
     //   paddingTop: '13px'
-    }
+    },
+    subtitle: {
+        display: 'inline-block',
+        paddingLeft: 24,
+        paddingRight: 24,
+        color: 'white',
+        textDecoration:'none',
+        opacity: 0.6,
+        fontSize: 20
+    },
 })
 
 export class Video extends Component {
@@ -28,7 +41,8 @@ export class Video extends Component {
                     start: startTime, 
                     controls:1, 
                     iv_load_policy:3, 
-                    modestbranding:1
+                    modestbranding:0
+
                 },
                 width: 1088,
                 height: 663,
@@ -113,6 +127,11 @@ export class Video extends Component {
         return (
             <Fragment >
                 <div id="player" className={classes.video}></div>
+                {this.props.video ? 
+                    <Typography variant="subtitle1" component="a" href={`https://www.youtube.com/watch?v=${this.props.video.videoId}`} className={classes.subtitle}>
+                        {this.props.video.title}
+                    </Typography>
+                : ''}
             </Fragment>
         )
     }    
@@ -120,7 +139,8 @@ export class Video extends Component {
 
 const mapStateToProps = state => ({
     channels: state.channels, 
-    channel: state.channel
+    channel: state.channel,
+    video: state.video
 })
 
 const mapDispatchToProps = dispatch => ({
