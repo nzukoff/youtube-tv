@@ -54,8 +54,10 @@ export class Video extends Component {
         }
     }
 
-    componentDidUpdate() {
-        this.loadNewChannel()
+    componentDidUpdate(prevProps) {
+        if (prevProps.channel.channelId !== this.props.channel.channelId ) {
+            this.loadNewVideo()
+        }
     }
 
     init = () => {
@@ -81,6 +83,7 @@ export class Video extends Component {
                 this.index = 0
                 this.videoIndexToPlay = 0
             } 
+            this.props.setVideo(this.props.channel.videos[this.videoIndexToPlay+this.index])
             this.player.loadVideoById({
                 videoId:this.props.channel.videos[this.videoIndexToPlay+this.index].videoId
                 
@@ -110,7 +113,7 @@ export class Video extends Component {
         return {startTime, videoIndexToPlay}
     }
 
-    loadNewChannel = () => {
+    loadNewVideo = () => {
         const {startTime, videoIndexToPlay} = this.findStartVideoAndTime(this.props.channel)
         this.videoIndexToPlay = videoIndexToPlay
         this.index = 1
