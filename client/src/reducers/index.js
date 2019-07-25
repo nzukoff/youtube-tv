@@ -21,7 +21,11 @@ const rootReducer = (state = initialState, action) => {
                 ...state,
                 channels: action.channels
             }
-
+        case 'UPDATE_CHANNEL':
+            return {
+                ...state,
+                channel: action.channel
+            }
         default:
         return (state)
     }

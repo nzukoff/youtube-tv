@@ -2,12 +2,15 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
 
-import { setVideo } from '../../actions/index'
+import { setVideo, setIndex } from '../../actions/index'
 
 import { withStyles } from '@material-ui/core/styles'
 
+import ChannelControls from '../ChannelControls/ChannelControls'
+
 import { 
-    Typography
+    Typography,
+    Grid
 } from '@material-ui/core'
 
 const styles = theme => ({
@@ -58,6 +61,9 @@ export class Video extends Component {
         if (prevProps.channel.channelId !== this.props.channel.channelId ) {
             this.loadNewVideo()
         }
+        if (Math.abs(prevProps.channel.indexToShow - this.props.channel.indexToShow) === 1) {
+            this.loadNewVideo()
+        }
     }
 
     init = () => {
@@ -68,6 +74,7 @@ export class Video extends Component {
     }
 
     onPlayerReady = (title) => {
+        this.props.setIndex(this.videoIndexToPlay)
         this.props.setVideo(title)
         this.player.playVideo()
     }
@@ -79,10 +86,13 @@ export class Video extends Component {
         //     done = true;
         // }
         if (e.data === this.YT.PlayerState.ENDED) {    
+            //need to reset vitp in store
             if (this.index+this.videoIndexToPlay === this.props.channel.videos.length) {
                 this.index = 0
                 this.videoIndexToPlay = 0
+                this.props.setIndex(0)
             } 
+            this.props.setIndex(this.videoIndexToPlay+this.index)
             this.props.setVideo(this.props.channel.videos[this.videoIndexToPlay+this.index])
             this.player.loadVideoById({
                 videoId:this.props.channel.videos[this.videoIndexToPlay+this.index].videoId
@@ -115,13 +125,16 @@ export class Video extends Component {
 
     loadNewVideo = () => {
         const {startTime, videoIndexToPlay} = this.findStartVideoAndTime(this.props.channel)
-        this.videoIndexToPlay = videoIndexToPlay
         this.index = 1
-        this.props.setVideo(this.props.channel.videos[videoIndexToPlay])
+        const indexToShow = this.props.channel.indexToShow ? this.props.channel.indexToShow : videoIndexToPlay
+        const start = this.props.channel.indexToShow ? 0 : startTime
+
+        this.props.setIndex(indexToShow)
+        this.props.setVideo(this.props.channel.videos[indexToShow])
 
         this.player.loadVideoById({
-            videoId:this.props.channel.videos[this.videoIndexToPlay].videoId,
-            startSeconds: startTime
+            videoId:this.props.channel.videos[indexToShow].videoId,
+            startSeconds: start
         })
     }
 
@@ -131,10 +144,18 @@ export class Video extends Component {
             <Fragment >
                 <div id="player" className={classes.video}></div>
                 {this.props.video ? 
-                    <Typography variant="subtitle1" component="a" href={`https://www.youtube.com/watch?v=${this.props.video.videoId}`} className={classes.subtitle}>
-                        {this.props.video.title}
-                    </Typography>
+                    <Grid container justify="space-between" alignItems="center">
+                        <Grid item xs={8}>
+                            <Typography variant="subtitle1" component="a" href={`https://www.youtube.com/watch?v=${this.props.video.videoId}`} className={classes.subtitle}>
+                                {this.props.video.title}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <ChannelControls />
+                        </Grid>
+                    </Grid>
                 : ''}
+                
             </Fragment>
         )
     }    
@@ -147,7 +168,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    setVideo: (video) => dispatch(setVideo(video))
+    setVideo: (video) => dispatch(setVideo(video)),
+    setIndex: (videoIndexToPlay) => dispatch(setIndex(videoIndexToPlay))
 })
 
 export default connect(

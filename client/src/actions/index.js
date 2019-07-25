@@ -64,6 +64,27 @@ export const setChannels = (channels) => ({
     channels
 })
 
+export const updateChannel = (channel) => {
+    return ({
+        type: 'UPDATE_CHANNEL',
+        channel
+    })
+}
+
+export const updateIndexToPlay = (channel, forward) => {
+    return async (dispatch) => {
+        const amount = forward ? 1 : -1
+        dispatch(updateChannel({...channel, indexToShow: channel.indexToShow+amount}))
+    }
+}
+
+export const setIndex = (videoIndexToPlay) => {
+    return (dispatch, getState) => {
+        const { channel } = getState()
+        dispatch(updateChannel({...channel, indexToShow: videoIndexToPlay}))
+    }
+}
+
 const randomChoice = (channels, channelsPlayed) => {
     const filteredChannels = channels.filter(channel => !channelsPlayed.some(c => c.channelId === channel[1]))
     const index = Math.floor(Math.random() * filteredChannels.length)

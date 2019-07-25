@@ -20,11 +20,6 @@ const styles = theme => ({
 })
 
 export class App extends Component {
-  constructor(props) {
-      super(props)
-
-  }
-
   componentDidMount() {
     this.props.getChannels()
   }
